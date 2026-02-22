@@ -15,6 +15,13 @@ buildPythonPackage rec {
     rev = pkgMeta.git_revision;
   };
 
+  # Upstream is missing __init__.py in core/ and phy/ subdirectories,
+  # so setuptools' find_packages() skips them.
+  postPatch = ''
+    touch litei2c/core/__init__.py
+    touch litei2c/phy/__init__.py
+  '';
+
   buildInputs = [
     litex
     migen
