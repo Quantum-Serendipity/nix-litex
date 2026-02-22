@@ -2,12 +2,13 @@ pkgMeta:
 { buildPythonPackage }:
 
 buildPythonPackage rec {
-  pname = "pythondata-misc-tapcfg";
+  pname = "pythondata-cpu-sentinel";
   version = pkgMeta.git_revision;
   format = "setuptools";
 
   src = builtins.fetchGit {
     url = "https://github.com/${pkgMeta.github_user}/${pkgMeta.github_repo}";
+    ref = "refs/heads/${pkgMeta.git_branch}";
     rev = pkgMeta.git_revision;
   };
 

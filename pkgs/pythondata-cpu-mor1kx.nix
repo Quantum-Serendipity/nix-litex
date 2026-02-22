@@ -2,7 +2,7 @@ pkgMeta:
 { buildPythonPackage }:
 
 buildPythonPackage rec {
-  pname = "pythondata-misc-tapcfg";
+  pname = "pythondata-cpu-mor1kx";
   version = pkgMeta.git_revision;
   format = "setuptools";
 

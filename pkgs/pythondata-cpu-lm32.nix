@@ -2,7 +2,7 @@ pkgMeta:
 { buildPythonPackage }:
 
 buildPythonPackage rec {
-  pname = "pythondata-misc-tapcfg";
+  pname = "pythondata-cpu-lm32";
   version = pkgMeta.git_revision;
   format = "setuptools";
 

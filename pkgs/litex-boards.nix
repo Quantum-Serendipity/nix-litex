@@ -15,6 +15,9 @@ pkgMeta:
 , valentyusb-hw_cdc_eptri
 , litevideo
 , litescope
+, litesata
+, litejesd204b
+, litei2c
 }:
 
 buildPythonPackage rec {
@@ -52,6 +55,9 @@ buildPythonPackage rec {
     valentyusb-hw_cdc_eptri
     litevideo
     litescope
+    litesata
+    litejesd204b
+    litei2c
   ];
 
   doCheck = true;

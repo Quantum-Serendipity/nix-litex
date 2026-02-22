@@ -1,8 +1,8 @@
 pkgMeta:
-{ mkSbtDerivation, python3, litex-unchecked, migen }:
+{ mkSbtDerivation, python, litex-unchecked, migen }:
 let
   # python environment with the litex used to generate the default CPU variants
-  pythonEnv = python3.withPackages (_: [ litex-unchecked migen ]);
+  pythonEnv = python.withPackages (_: [ litex-unchecked migen ]);
 in
 mkSbtDerivation rec {
   pname = "pythondata-cpu-vexriscv_smp-generated";

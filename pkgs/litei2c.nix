@@ -1,15 +1,24 @@
 pkgMeta:
-{ buildPythonPackage }:
+{ lib
+, buildPythonPackage
+, litex
+, migen
+}:
 
 buildPythonPackage rec {
-  pname = "pythondata-misc-tapcfg";
+  pname = "litei2c";
   version = pkgMeta.git_revision;
-  format = "setuptools";
 
   src = builtins.fetchGit {
     url = "https://github.com/${pkgMeta.github_user}/${pkgMeta.github_repo}";
+    ref = "refs/heads/${pkgMeta.git_branch}";
     rev = pkgMeta.git_revision;
   };
 
-  doCheck = false;
+  buildInputs = [
+    litex
+    migen
+  ];
+
+  doCheck = true;
 }

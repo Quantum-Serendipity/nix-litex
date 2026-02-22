@@ -31,17 +31,14 @@ let
   # other packages for the sbt build is taken. Hence, we pin a version
   # here (preferably from the current Nixpkgs release). It can be
   # overriden by passing the `sbtNixpkgs` argument.
-  sbtPinnedNixpkgs =
-    import
-      (builtins.fetchTarball {
-        # Descriptive name to make the store path easier to identify
-        name = "nixos-22.05-2022-08-06";
-        # Commit hash for nixos-22.05 as of 2022-08-06
-        url = "https://github.com/nixos/nixpkgs/archive/72f492e275fc29d44b3a4daf952fbeffc4aed5b8.tar.gz";
-        # Hash obtained using `nix-prefetch-url --unpack <url>`
-        sha256 = "1n06bz81x5ij3if032w4hggq13mgsqly3bn54809szajxnazfm0v";
-      })
-      { };
+  sbtPinnedNixpkgsSrc = builtins.fetchTarball {
+    # Descriptive name to make the store path easier to identify
+    name = "nixos-22.05-2022-08-06";
+    # Commit hash for nixos-22.05 as of 2022-08-06
+    url = "https://github.com/nixos/nixpkgs/archive/72f492e275fc29d44b3a4daf952fbeffc4aed5b8.tar.gz";
+    # Hash obtained using `nix-prefetch-url --unpack <url>`
+    sha256 = "1n06bz81x5ij3if032w4hggq13mgsqly3bn54809szajxnazfm0v";
+  };
 in
 
 # pkgMetas: Metadata for the packages such that you can control which revisions
@@ -50,7 +47,7 @@ in
 { pkgs
 , skipChecks ? false
 , pkgMetas ? fromTOML pkgs (builtins.readFile ./litex_packages.toml)
-, sbtNixpkgs ? sbtPinnedNixpkgs
+, sbtNixpkgs ? import sbtPinnedNixpkgsSrc { system = pkgs.stdenv.hostPlatform.system; }
 }:
 
 let
@@ -76,6 +73,12 @@ let
     "litesdcard"
     "litespi"
     "litevideo"
+    "litesata"
+    "litejesd204b"
+    {
+      name = "litei2c";
+      path = ./litei2c.nix;
+    }
     {
       name = "valentyusb-hw_cdc_eptri";
       path = ./valentyusb/valentyusb-hw_cdc_eptri.nix;
@@ -103,6 +106,7 @@ let
       maker = attrs: self.buildPythonPackage (attrs // {
         pname = "${attrs.pname}-pkg";
         doCheck = false;
+        format = attrs.format or "setuptools";
         passthru._base_name = attrs.pname;
         passthru._src = attrs.src;
       });
@@ -117,6 +121,7 @@ let
       args = builtins.foldl' (acc: name: acc // { ${name} = self.${"${name}-unchecked"}; }) { } argNames;
       maker = attrs: self.buildPythonPackage (attrs // {
         pname = "${attrs.pname}-${if attrs.doCheck then "test" else "untested" }";
+        format = attrs.format or "setuptools";
 
         # It's important that we don't provide any packages as part of this
         # derivation's output to avoid errors such as the following:
@@ -158,6 +163,7 @@ let
       args = {
         pname = pkg._base_name;
         inherit (pkg) version;
+        format = "other";
 
         src = pkg._src;
 
@@ -219,6 +225,20 @@ let
         self.callPackage (import ./pythondata-cpu-serv.nix pkgMetas.pythondata-cpu-serv) { };
       pythondata-software-picolibc =
         self.callPackage (import ./pythondata-software-picolibc.nix pkgMetas.pythondata-software-picolibc) { };
+      pythondata-cpu-lm32 =
+        self.callPackage (import ./pythondata-cpu-lm32.nix pkgMetas.pythondata-cpu-lm32) { };
+      pythondata-cpu-mor1kx =
+        self.callPackage (import ./pythondata-cpu-mor1kx.nix pkgMetas.pythondata-cpu-mor1kx) { };
+      pythondata-cpu-minerva =
+        self.callPackage (import ./pythondata-cpu-minerva.nix pkgMetas.pythondata-cpu-minerva) { };
+      pythondata-cpu-naxriscv =
+        self.callPackage (import ./pythondata-cpu-naxriscv.nix pkgMetas.pythondata-cpu-naxriscv) { };
+      pythondata-cpu-sentinel =
+        self.callPackage (import ./pythondata-cpu-sentinel.nix pkgMetas.pythondata-cpu-sentinel) { };
+      pythondata-cpu-vexiiriscv =
+        self.callPackage (import ./pythondata-cpu-vexiiriscv.nix pkgMetas.pythondata-cpu-vexiiriscv) { };
+      pythondata-misc-usb_ohci =
+        self.callPackage (import ./pythondata-misc-usb_ohci.nix pkgMetas.pythondata-misc-usb_ohci) { };
     };
 
   applyOverlay = python: python.override {
@@ -228,12 +248,8 @@ let
   overlay = self: super: {
     mkSbtDerivation = sbtNixpkgs.callPackage ./sbt-derivation.nix { };
 
-    # Why...
     python3 = applyOverlay super.python3;
-    python37 = applyOverlay super.python37;
-    python38 = applyOverlay super.python38;
-    python39 = applyOverlay super.python39;
-    python310 = applyOverlay super.python310;
+    python3Packages = self.python3.pkgs;
   };
 
   extended = pkgs.extend overlay;
@@ -253,6 +269,13 @@ let
           "pythondata-software-compiler_rt"
           "pythondata-cpu-serv"
           "pythondata-software-picolibc"
+          "pythondata-cpu-lm32"
+          "pythondata-cpu-mor1kx"
+          "pythondata-cpu-minerva"
+          "pythondata-cpu-naxriscv"
+          "pythondata-cpu-sentinel"
+          "pythondata-cpu-vexiiriscv"
+          "pythondata-misc-usb_ohci"
         ]
       )) // {
       mkSbtDerivation = extended.mkSbtDerivation;
@@ -271,7 +294,7 @@ let
 
     buildInputs = [
       pkgs.python3Packages.toml
-      pkgs.python3Packages.GitPython
+      pkgs.python3Packages.gitpython
     ];
 
     installPhase = ''

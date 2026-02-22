@@ -7,6 +7,7 @@ pkgMeta:
 buildPythonPackage rec {
   pname = "pythondata-cpu-vexriscv";
   version = pkgMeta.git_revision;
+  format = "setuptools";
 
   src = generated;
 

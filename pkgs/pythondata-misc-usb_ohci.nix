@@ -2,13 +2,14 @@ pkgMeta:
 { buildPythonPackage }:
 
 buildPythonPackage rec {
-  pname = "pythondata-misc-tapcfg";
+  pname = "pythondata-misc-usb_ohci";
   version = pkgMeta.git_revision;
   format = "setuptools";
 
   src = builtins.fetchGit {
     url = "https://github.com/${pkgMeta.github_user}/${pkgMeta.github_repo}";
     rev = pkgMeta.git_revision;
+    submodules = true;
   };
 
   doCheck = false;
