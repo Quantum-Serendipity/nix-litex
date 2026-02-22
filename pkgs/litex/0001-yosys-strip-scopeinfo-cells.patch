@@ -1,0 +1,9 @@
+--- a/litex/build/yosys_wrapper.py
++++ b/litex/build/yosys_wrapper.py
+@@ -95,6 +95,7 @@
+         "{yosys_cmds}",
+         "synth_{target} {synth_opts} -top {build_name}",
++        "delete t:$scopeinfo",
+         "write_{write_fmt} {write_opts} {output_name}.{synth_fmt}",
+     ]
+

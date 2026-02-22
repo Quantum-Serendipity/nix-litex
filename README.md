@@ -7,6 +7,10 @@ This is an actively maintained fork of the original
 which is no longer maintained. Packages have been updated to current upstream
 revisions, new packages have been added, and the build infrastructure has been converted to a Nix flake.
 
+## Warning
+
+This is the first thing I have attempted to package for Nix, and is the result of taking "hacked together garbage that finally managed to work" and converting it into a usable package which can be published and used by others.  I have attempted to test this to the best of my [limited] Nix ability and It Works On My Machine™ but if I'm doing something wrong or it doesn't work for you please let me know and I'll try to fix it.  This package is being used by an openxc7 package I am currently working on upgrading to current versions as well so that it can all be used for litex FOSS SOC generation, and that package will be used to create an upstream PR for the litex m2 sdr project providing it with an alternative bitstream synthesis toolchain utilizing only FOSS tools and removing the tempermental Vivado requirement.
+
 ## Usage
 
 This flake is designed to be consumed as an input by your own project flake. It provides **overlays** that add all LiteX packages to your nixpkgs Python
