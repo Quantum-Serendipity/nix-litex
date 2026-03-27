@@ -47,12 +47,16 @@ buildPythonPackage rec {
         'If(count == data_width,' \
         'If(count == (data_width - 1),'
 
-    # Fix picolibc copy from read-only nix store: cp -a preserves permissions, so the
-    # copied tree remains read-only and subsequent builds fail. Make writable after copy.
+    # Fix nix store read-only permissions: files copied from the store retain their
+    # read-only bits, breaking both picolibc.h generation (append fails) and picolibc
+    # source builds (write fails). Make writable after each copy.
     substituteInPlace litex/soc/software/libc/Makefile \
       --replace-fail \
         'cp -a $(PICOLIBC_DIRECTORY) $(BUILDINC_DIRECTORY)/../picolibc_src' \
-        'cp -a $(PICOLIBC_DIRECTORY) $(BUILDINC_DIRECTORY)/../picolibc_src && chmod -R u+w $(BUILDINC_DIRECTORY)/../picolibc_src'
+        'cp -a $(PICOLIBC_DIRECTORY) $(BUILDINC_DIRECTORY)/../picolibc_src && chmod -R u+w $(BUILDINC_DIRECTORY)/../picolibc_src' \
+      --replace-fail \
+        'cp $< $@' \
+        'cp $< $@ && chmod u+w $@'
   '';
 
   propagatedBuildInputs = [
