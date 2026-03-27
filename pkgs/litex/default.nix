@@ -38,15 +38,6 @@ buildPythonPackage rec {
   };
 
   postPatch = ''
-    # Fix JTAGPHY count comparison regression (LiteX commits 2eef758..4a086cc, Feb 2026):
-    # Signal(max=data_width) holds values 0..data_width-1, so count == data_width is
-    # always false, preventing the XFER-DATA FSM state from transitioning. This causes
-    # Vivado to optimize away the count register, breaking all JTAG communication.
-    substituteInPlace litex/soc/cores/jtag.py \
-      --replace-fail \
-        'If(count == data_width,' \
-        'If(count == (data_width - 1),'
-
     # Fix nix store read-only permissions: files copied from the store retain their
     # read-only bits, breaking both picolibc.h generation (append fails) and picolibc
     # source builds (write fails). Make writable after each copy.
