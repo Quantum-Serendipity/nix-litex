@@ -1,8 +1,6 @@
 pkgMeta:
 { lib
-, writeText
 , buildPythonPackage
-, fetchpatch
 , pythondata-software-compiler_rt
 , pythondata-software-picolibc
 , pythondata-cpu-vexriscv
@@ -119,13 +117,8 @@ buildPythonPackage rec {
       -L${zeromq}/lib \
       $NIX_LDFLAGS"
 
-    # Only test CPU variants we actually package and want to support
-    # as part of this repository. Others are disabled by the following
-    # patch:
-    patch -p1 < ${writeText "disable-litex-test-cpus.patch" (
-      builtins.readFile ./0001-Disable-LiteX-CPU-tests-for-select-CPUs.patch)}
-
-    pytest -v test/
+    # Skip CPU integration tests for CPUs not packaged in this repo
+    pytest -v test/ -k "not (femtorv or firev or marocchino or neorv32 or ibex or cv32e40p)"
   '';
 
   doCheck = true;
