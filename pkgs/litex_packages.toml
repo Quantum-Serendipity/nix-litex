@@ -1,12 +1,12 @@
 [litex]
 github_user = "enjoy-digital"
 github_repo = "litex"
-git_revision = "e4179f98beb52d115bdd4b3d359e4fe0cd5120fc"
+git_revision = "498d1fe8270b8456ed4615bf14847eb05ae38860"
 
 [litex-boards]
 github_user = "litex-hub"
 github_repo = "litex-boards"
-git_revision = "35e7731f14e217a3f3718dc3ce6d72c97a2e3113"
+git_revision = "448f9d588435f05cec79ca3939d637a0ed79db4c"
 
 [liteeth]
 github_user = "enjoy-digital"
@@ -36,7 +36,7 @@ git_revision = "a8a8e7ee10dc2cc5b888c4e069391bd7370710ba"
 [litescope]
 github_user = "enjoy-digital"
 github_repo = "litescope"
-git_revision = "92835f00d2f97d5b9415c39e52b1bc9b6d1d8641"
+git_revision = "2dafca2ddce94101fdacf45acde643573eeb5307"
 
 [litesdcard]
 github_user = "enjoy-digital"

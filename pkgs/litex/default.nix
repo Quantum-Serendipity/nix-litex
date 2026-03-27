@@ -39,6 +39,24 @@ buildPythonPackage rec {
     rev = pkgMeta.git_revision;
   };
 
+  postPatch = ''
+    # Fix JTAGPHY count comparison regression (LiteX commits 2eef758..4a086cc, Feb 2026):
+    # Signal(max=data_width) holds values 0..data_width-1, so count == data_width is
+    # always false, preventing the XFER-DATA FSM state from transitioning. This causes
+    # Vivado to optimize away the count register, breaking all JTAG communication.
+    substituteInPlace litex/soc/cores/jtag.py \
+      --replace-fail \
+        'If(count == data_width,' \
+        'If(count == (data_width - 1),'
+
+    # Fix picolibc copy from read-only nix store: cp -a preserves permissions, so the
+    # copied tree remains read-only and subsequent builds fail. Make writable after copy.
+    substituteInPlace litex/soc/software/libc/Makefile \
+      --replace-fail \
+        'cp -a $(PICOLIBC_DIRECTORY) $(BUILDINC_DIRECTORY)/../picolibc_src' \
+        'cp -a $(PICOLIBC_DIRECTORY) $(BUILDINC_DIRECTORY)/../picolibc_src && chmod -R u+w $(BUILDINC_DIRECTORY)/../picolibc_src'
+  '';
+
   propagatedBuildInputs = [
     # LLVM's compiler-rt data downloaded and importable as a python
     # package
