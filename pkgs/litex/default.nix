@@ -48,6 +48,17 @@ buildPythonPackage rec {
       --replace-fail \
         'cp $< $@' \
         'cp $< $@ && chmod u+w $@'
+
+    # Fix JTAGPHY Signal width bug from PR #2410.
+    # Signal(max=data_width) creates a (data_width-1).bit_length()-bit register
+    # that can hold values 0..(data_width-1). For data_width=8 (default),
+    # this is a 3-bit signal (0-7), so "count == data_width" (== 8) is
+    # unreachable. Vivado optimizes the counter away, collapsing the FSM.
+    # Fix: compare against data_width - 1.
+    substituteInPlace litex/soc/cores/jtag.py \
+      --replace-fail \
+        'If(count == data_width,' \
+        'If(count == (data_width - 1),'
   '';
 
   propagatedBuildInputs = [
