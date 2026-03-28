@@ -1,7 +1,7 @@
 [litex]
-github_user = "enjoy-digital"
+github_user = "Quantum-Serendipity"
 github_repo = "litex"
-git_revision = "498d1fe8270b8456ed4615bf14847eb05ae38860"
+git_revision = "a0a050b01e97a12f2e27e2f50e3b00ed8b01b9bd"
 
 [litex-boards]
 github_user = "litex-hub"
