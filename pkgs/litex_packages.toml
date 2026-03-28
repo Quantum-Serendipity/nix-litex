@@ -2,7 +2,7 @@
 github_user = "Quantum-Serendipity"
 github_repo = "litex"
 git_branch = "revert-jtagphy-slopware"
-git_revision = "a0a050b01e97a12f2e27e2f50e3b00ed8b01b9bd"
+git_revision = "a0a050b01226df643954b8a0f875065c1db06319"
 
 [litex-boards]
 github_user = "litex-hub"
