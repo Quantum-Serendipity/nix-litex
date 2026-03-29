@@ -1,7 +1,8 @@
 [litex]
-github_user = "enjoy-digital"
+github_user = "Quantum-Serendipity"
 github_repo = "litex"
-git_revision = "498d1fe8270b8456ed4615bf14847eb05ae38860"
+git_revision = "ef7aaa07dd4ac8657f083458ac01e8215c57cf13"
+git_branch = "fix-jtagphy-pr2410"
 
 [litex-boards]
 github_user = "litex-hub"
