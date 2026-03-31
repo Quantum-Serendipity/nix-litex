@@ -1,7 +1,7 @@
 [litex]
 github_user = "Quantum-Serendipity"
 github_repo = "litex"
-git_revision = "0233549c2f709c59b19a9352344ab9f3fa85615a"
+git_revision = "b9408384eab9386f60583b835876645e8d5d3683"
 git_branch = "fix-jtagphy-pr2410"
 
 [litex-boards]
